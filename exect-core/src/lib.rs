@@ -101,8 +101,10 @@ pub fn generate_manifest(
 
 #[derive(Error, Debug)]
 pub enum ExectError {
-    #[error("Cannot execute, unknown instruction: {0}")]
+    #[error("Unknown instruction: {0}")]
     UnknownInstruction(u8),
+    #[error("Jump out of bounds: {0}")]
+    JumpOutOfBounds(usize),
 }
 
 pub struct BinaryBuilder {
@@ -155,6 +157,9 @@ impl<'a> BinaryExecutor<'a> {
                 if let Some(signal) = instruction.execute() {
                     match signal {
                         ExecutorSignal::JumpTo(offset) => {
+                            if offset >= self.buffer.len() {
+                                return Err(ExectError::JumpOutOfBounds(offset));
+                            }
                             buffer = &self.buffer[offset..];
                             continue;
                         }
