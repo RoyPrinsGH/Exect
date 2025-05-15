@@ -1,0 +1,11 @@
+[package]
+name = "exect-cli"
+version = "0.1.0"
+edition = "2024"
+
+[dependencies]
+exect-core = { path = "../exect-core" }
+exect-macros = { path = "../exect-macros" }
+
+[[bin]]
+name = "exect-cli"
